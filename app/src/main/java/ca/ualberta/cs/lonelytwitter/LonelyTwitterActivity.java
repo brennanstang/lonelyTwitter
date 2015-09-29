@@ -29,7 +29,7 @@ public class LonelyTwitterActivity extends Activity {
 	private static final String FILENAME = "file.sav";
 	private EditText bodyText;
 	private ListView oldTweetsList;
-	private ArrayList<Tweet> tweets = new ArrayList<Tweet>();
+	private ArrayList<Tweet> tweets;
 	private ArrayAdapter<Tweet> adapter;
 
 	/** Called when the activity is first created. */
