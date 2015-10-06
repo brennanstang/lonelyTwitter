@@ -24,75 +24,78 @@ import android.widget.ListView;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
-public class LonelyTwitterActivity extends Activity {
+public class LonelyTwitterActivity extends Activity implements MyObserver {
 
-	private static final String FILENAME = "file.sav";
-	private EditText bodyText;
-	private ListView oldTweetsList;
-	private ArrayList<Tweet> tweets;
-	private ArrayAdapter<Tweet> adapter;
+	private static final String FILENAME = "file.sav";	//model
+	private EditText bodyText;	//model
+	private ListView oldTweetsList;	//model
+	private ArrayList<Tweet> tweets;	//model
+	private ArrayAdapter<Tweet> adapter;	//model
 
 	/** Called when the activity is first created. */
 	@Override
-	public void onCreate(Bundle savedInstanceState) {
+	public void onCreate(Bundle savedInstanceState) {	//all
 
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.main);
+		setContentView(R.layout.main); //View
 
-		bodyText = (EditText) findViewById(R.id.body);
-		Button saveButton = (Button) findViewById(R.id.save);
-		oldTweetsList = (ListView) findViewById(R.id.oldTweetsList);
+		bodyText = (EditText) findViewById(R.id.body); //Controller
+		Button saveButton = (Button) findViewById(R.id.save); //View
+		oldTweetsList = (ListView) findViewById(R.id.oldTweetsList); //View
 
 		saveButton.setOnClickListener(new View.OnClickListener() {
-
 			public void onClick(View v) {
 				setResult(RESULT_OK);
-				String text = bodyText.getText().toString();
-				tweets.add(new NormalTweet(text));
-				saveInFile();
-				adapter.notifyDataSetChanged();
+				String text = bodyText.getText().toString();	//move to controller
+				tweets.add(new NormalTweet(text));	//move to controller
+				saveInFile();	//move to model
+				adapter.notifyDataSetChanged();	//model
 			}
 		});
 	}
 
 	@Override
-	protected void onStart() {
+	protected void onStart() {	//model
 		// TODO Auto-generated method stub
 		super.onStart();
-		loadFromFile();
-		adapter = new ArrayAdapter<Tweet>(this, R.layout.list_item, tweets);
-		oldTweetsList.setAdapter(adapter);
+		loadFromFile();	//model
+		adapter = new ArrayAdapter<Tweet>(this, R.layout.list_item, tweets);	//model
+		oldTweetsList.setAdapter(adapter);	//model
 	}
 
-	private void loadFromFile() {
+	private void loadFromFile() { //model
 		try {
-			FileInputStream fis = openFileInput(FILENAME);
-			BufferedReader in = new BufferedReader(new InputStreamReader(fis));
-			Gson gson = new Gson();
+			FileInputStream fis = openFileInput(FILENAME);	//model
+			BufferedReader in = new BufferedReader(new InputStreamReader(fis));	//model
+			Gson gson = new Gson();	//model
 			//Following line based on https://google-gson.googlecode.com/svn/trunk/gson/docs/javadocs/com/google/gson/Gson.html
-			Type listType = new TypeToken<ArrayList<NormalTweet>>() {}.getType();
-			tweets = gson.fromJson(in, listType);
+			Type listType = new TypeToken<ArrayList<NormalTweet>>() {}.getType();	//model
+			tweets = gson.fromJson(in, listType);	//model
 
 
-		} catch (FileNotFoundException e) {
+		} catch (FileNotFoundException e) {	//model
 			tweets = new ArrayList<Tweet>();
 		} catch (IOException e) {
-			throw new RuntimeException(e);
+			throw new RuntimeException(e); 	//model
 		}
 	}
 	
-	private void saveInFile() {
+	private void saveInFile() {	//model
 		try {
-			FileOutputStream fos = openFileOutput(FILENAME, 0);
-			OutputStreamWriter writer = new OutputStreamWriter(fos);
-			Gson gson = new Gson();
-			gson.toJson(tweets, writer);
-			writer.flush();
-			fos.close();
+			FileOutputStream fos = openFileOutput(FILENAME, 0);	//model
+			OutputStreamWriter writer = new OutputStreamWriter(fos);	//model
+			Gson gson = new Gson();	//model
+			gson.toJson(tweets, writer);	//model
+			writer.flush();	//model
+			fos.close();	//model
 		} catch (FileNotFoundException e) {
-			throw new RuntimeException(e);
+			throw new RuntimeException(e);	//model
 		} catch (IOException e) {
-			throw new RuntimeException(e);
+			throw new RuntimeException(e);	//model
 		}
+	}
+
+	public void myNotify(MyObservable observable) {
+		adapter.notifyDataSetChanged();	//model
 	}
 }

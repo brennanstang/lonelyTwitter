@@ -1,11 +1,14 @@
 package ca.ualberta.cs.lonelytwitter;
 
+import java.util.ArrayList;
 import java.util.Date;
 
 /**
  * Created by joshua2 on 9/16/15.
  */
 public class ImportantTweet extends Tweet {
+    public ArrayList<MyObserver> observers;
+
     public ImportantTweet(String tweet, Date date) {
         super(tweet, date);
         this.setText(tweet);
@@ -23,6 +26,10 @@ public class ImportantTweet extends Tweet {
     @Override
     public String getText() {
         return "!!!" + super.getText();
+    }
+
+    public void addObserver(MyObserver observer){
+        observers.add(observer);
     }
 
 }
